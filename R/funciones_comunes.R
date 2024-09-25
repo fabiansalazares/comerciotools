@@ -131,17 +131,38 @@ graficos_estilo_no_energeticos_largo <- function(.x, n_colors=10) {
 }
 
 # Destinos ----
-
-## conjunto de la balanza comercial ----
+#' Fijar estilo de gráfico estándar para SGEstudios, con algunos parámetros opcionales
+#' @param .tipo_grafico Cadena de caracteres. Puede tomar valores "millones", "porcentaje" o NULL. Si es distinto a NULL, el resto de argumentos no se tienen en cuenta en la medida en que colisionen con los definidos para el tipo de gráfico.
+#' @param .scale Número. Factor por el que dividir los números del eje. Por defecto, 1. Para millones, p.ej., habría que fijar a 1e+6 o 1000000.
+#' @param .accuracy Número. Número de decimales a mostrar en eje. Por defecto, 1. Para mostrar 0 decimales, fijar a 1; para 1 decimal, fijar a 0.1; para 2, a 0.01 y así...
+#' @param .suffix Cadena de caracteres. Por defecto, cadena vacía.
+#' @param .minimo_eje_y Número. Valor mínimo en el eje. Por defecto, NULL y el mínimo se adapta al gráfico
+#' @param .maximo_eje_y Número. Valor máximo en el eje. Por defecto, NULL y el mínimo se adapta al gráfico
+#' @param .date_labels Cadena de caracteres. Formato de las fechas en eje de abscisas. Por defecto, "%Y". Para mostrar el año y mes abreviado, fijar a "%Y-%b"; para fijar sólo el número del año "%Y". Para otros casos, ver documentación de scale_x_date.
+#' @param .date_breaks Cadena de caracteres. Frecuencia de las fechas en eje de abscisas. Por defecto, "1 year". Para mostrar una fecha cada seis meses, fijar a "6 months"; para mostrar fechas cada 2 años, fijar a "2 years".
+#' @param .position Cadena de caracteres. Posición del eje de ordenadas. Por defecto, "right".
+#' @param .n_colors Número. Número de colores a generar en la paleta. No tiene efecto.
 #' @export
-graficos_estilo_destino <- function(.x, n_colors=10) {
+graficos_estilo_destino <- function(
+    .x,
+    .tipo_grafico = NULL,
+    .scale = 1,
+    .accuracy=1,
+    .suffix="",
+    .minimo_eje_y=NULL,
+    .maximo_eje_y=NULL,
+    .date_labels="%Y",
+    .date_breaks="1 year",
+    .position="right",
+    .n_colors=10
+    ) {
   # pal <- wesanderson::wes_palette("BottleRocket2", n_colors, type = "continuous")
 
   palette("Tableau 10")
   pal <- palette()
-   .x +
-    colores_sgestudios() +
-    scale_y_continuous(position="right", labels = scales::number_format(scale=1e-6, suffix="M", big.mark=".", decimal.mark=",")) +
+
+  .plot_to_return_df <- .x +
+    tema_sgestudios() +
     theme(
       text = element_text(size=14),
       legend.text = element_text(size=18),
@@ -149,6 +170,56 @@ graficos_estilo_destino <- function(.x, n_colors=10) {
     )   +
     guides(color=guide_legend(nrow=3,byrow=TRUE)) +
     scale_color_manual(values = pal)
+
+  suffix_definido <- .suffix
+  scale_definido <- .scale
+  accuracy_definido <- .accuracy
+
+  if(length(.tipo_grafico) > 0) {
+    message("x")
+    if (.tipo_grafico == "millones") {
+      suffix_definido <- "M"
+      scale_definido <- 1
+      accuracy_definido <- 1
+    } else if (.tipo_grafico == "porcentaje") {
+      suffix_definido <- "%"
+      scale_definido <- 1e2
+      accuracy_definido <- 0.1
+    }
+  }
+
+  if(!is.null(.minimo_eje_y) & !is.null(.maximo_eje_y)) {
+    .plot_to_return_df <- .plot_to_return_df +
+      scale_x_date(
+        date_labels = .date_labels,
+        date_breaks = .date_breaks
+      ) +
+      scale_y_continuous(
+        labels=scales::number_format(
+          accuracy=accuracy_definido,
+          scale=scale_definido,
+          suffix=suffix_definido,
+          limits = c(.minimo_eje_y, .maximo_eje_y)
+        ),
+        position=.position
+      )
+  } else {
+    .plot_to_return_df <- .plot_to_return_df +
+      scale_x_date(
+        date_labels = .date_labels,
+        date_breaks = .date_breaks
+      ) +
+      scale_y_continuous(
+        labels=scales::number_format(
+          accuracy=accuracy_definido,
+          scale=scale_definido,
+          suffix=suffix_definido
+        ),
+        position=.position
+      )
+  }
+
+  return(.plot_to_return_df)
 }
 
 ## conjunto de la balanza comercial - corto ----

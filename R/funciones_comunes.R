@@ -187,7 +187,7 @@ graficos_estilo_destino <- function(
       scale_definido <- 1e2
       accuracy_definido <- 0.1
     } else if (.tipo_grafico == "nofecha") {
-      .plot_to_return_plt <- .plot_to_return_plt |>
+      .plot_to_return_plt <- .plot_to_return_plt +
         scale_y_continuous(
           labels=scales::number_format(
             accuracy=accuracy_definido,

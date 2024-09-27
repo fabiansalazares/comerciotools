@@ -156,11 +156,11 @@ graficos_estilo_destino <- function(
     .position="right",
     .n_colors=10
     ) {
+
   # pal <- wesanderson::wes_palette("BottleRocket2", n_colors, type = "continuous")
 
   palette("Tableau 10")
   pal <- palette()
-
 
   .plot_to_return_df <- .x +
     tema_sgestudios() +
@@ -177,23 +177,7 @@ graficos_estilo_destino <- function(
   accuracy_definido <- .accuracy
 
   # si el gráfico no tiene valores de tipo de x en el eje de abscisas
-  if(.x$data[,as_label(.x$mapping$x)] |> _[[1]] |> class() != "Date"){
-    .plot_to_return_df <- .plot_to_return_df |>
-      scale_y_continuous(
-        labels=scales::number_format(
-          accuracy=accuracy_definido,
-          scale=scale_definido,
-          suffix=suffix_definido,
-          limits = c(.minimo_eje_y, .maximo_eje_y)
-        ),
-        position=.position
-      )
-
-    return(.plot_to_return_df)
-  }
-
   if(length(.tipo_grafico) > 0) {
-    message("x")
     if (.tipo_grafico == "millones") {
       suffix_definido <- "M"
       scale_definido <- 1
@@ -202,6 +186,19 @@ graficos_estilo_destino <- function(
       suffix_definido <- "%"
       scale_definido <- 1e2
       accuracy_definido <- 0.1
+    } else if (.tipo_grafico == "nofecha") {
+      .plot_to_return_df <- .plot_to_return |>
+        scale_y_continuous(
+          labels=scales::number_format(
+            accuracy=accuracy_definido,
+            scale=scale_definido,
+            suffix=suffix_definido,
+            limits = c(.minimo_eje_y, .maximo_eje_y)
+          ),
+          position=.position
+        )
+
+      return(.plot_to_return_df)
     }
   }
 

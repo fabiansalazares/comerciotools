@@ -162,7 +162,7 @@ graficos_estilo_destino <- function(
   palette("Tableau 10")
   pal <- palette()
 
-  .plot_to_return_df <- .x +
+  .plot_to_return_plt <- .x +
     tema_sgestudios() +
     theme(
       text = element_text(size=14),
@@ -187,7 +187,7 @@ graficos_estilo_destino <- function(
       scale_definido <- 1e2
       accuracy_definido <- 0.1
     } else if (.tipo_grafico == "nofecha") {
-      .plot_to_return_df <- .plot_to_return |>
+      .plot_to_return_plt <- .plot_to_return_plt |>
         scale_y_continuous(
           labels=scales::number_format(
             accuracy=accuracy_definido,
@@ -198,12 +198,12 @@ graficos_estilo_destino <- function(
           position=.position
         )
 
-      return(.plot_to_return_df)
+      return(.plot_to_return_plt)
     }
   }
 
   if(!is.null(.minimo_eje_y) & !is.null(.maximo_eje_y)) {
-    .plot_to_return_df <- .plot_to_return_df +
+    .plot_to_return_plt <- .plot_to_return_plt +
       scale_x_date(
         date_labels = .date_labels,
         date_breaks = .date_breaks
@@ -218,7 +218,7 @@ graficos_estilo_destino <- function(
         position=.position
       )
   } else {
-    .plot_to_return_df <- .plot_to_return_df +
+    .plot_to_return_plt <- .plot_to_return_plt +
       scale_x_date(
         date_labels = .date_labels,
         date_breaks = .date_breaks
@@ -233,7 +233,7 @@ graficos_estilo_destino <- function(
       )
   }
 
-  return(.plot_to_return_df)
+  return(.plot_to_return_plt)
 }
 
 ## conjunto de la balanza comercial - corto ----

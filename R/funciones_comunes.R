@@ -142,6 +142,7 @@ graficos_estilo_no_energeticos_largo <- function(.x, n_colors=10) {
 #' @param .date_breaks Cadena de caracteres. Frecuencia de las fechas en eje de abscisas. Por defecto, "1 year". Para mostrar una fecha cada seis meses, fijar a "6 months"; para mostrar fechas cada 2 años, fijar a "2 years".
 #' @param .position Cadena de caracteres. Posición del eje de ordenadas. Por defecto, "right".
 #' @param .n_colors Número. Número de colores a generar en la paleta. No tiene efecto.
+#' @param .text_axis_size Número. Tamaño de la fuente en los títulos de los ejes. Sólo aplicable para `.tipo_grafico = "nofecha"`
 #' @export
 graficos_estilo_destino <- function(
     .x,
@@ -154,7 +155,8 @@ graficos_estilo_destino <- function(
     .date_labels="%Y",
     .date_breaks="1 year",
     .position="right",
-    .n_colors=10
+    .n_colors=10,
+    .text_axis_size=12
     ) {
 
   # pal <- wesanderson::wes_palette("BottleRocket2", n_colors, type = "continuous")
@@ -196,6 +198,10 @@ graficos_estilo_destino <- function(
             limits = c(.minimo_eje_y, .maximo_eje_y)
           ),
           position=.position
+        ) +
+        theme(
+          axis.title.x = ggplot2::element_text(size=.text_axis_size),
+          axis.title.y = ggplot2::element_text(size=.text_axis_size)
         )
 
       return(.plot_to_return_plt)

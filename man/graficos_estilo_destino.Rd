@@ -15,7 +15,8 @@ graficos_estilo_destino(
   .date_labels = "\%Y",
   .date_breaks = "1 year",
   .position = "right",
-  .n_colors = 10
+  .n_colors = 10,
+  .text_axis_size = 12
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ graficos_estilo_destino(
 \item{.position}{Cadena de caracteres. Posición del eje de ordenadas. Por defecto, "right".}
 
 \item{.n_colors}{Número. Número de colores a generar en la paleta. No tiene efecto.}
+
+\item{.text_axis_size}{Número. Tamaño de la fuente en los títulos de los ejes. Sólo aplicable para \code{.tipo_grafico = "nofecha"}}
 }
 \description{
 Fijar estilo de gráfico estándar para SGEstudios, con algunos parámetros opcionales
